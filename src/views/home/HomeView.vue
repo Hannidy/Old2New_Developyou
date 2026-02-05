@@ -1,90 +1,83 @@
 <template>
   <div class="home-container">
-    <header class="header">
-      <div class="logo">O2N Market</div>
-      <nav class="nav-links">
-        <a href="#">Trang chủ</a>
-        <a href="#">Sản phẩm</a>
-        <a href="#">Blog</a>
-      </nav>
-      <div class="auth-buttons">
-        <router-link to="/login" class="btn-login">Đăng nhập</router-link>
-      </div>
-    </header>
+    <!-- dùng lại Header đã tạo -->
+    <Header />
 
+    <!-- Banner -->
     <section class="banner">
       <h1>Chào mừng đến với OLD2NEW</h1>
       <p>Sàn thương mại điện tử C2C - Mua cũ đổi mới, uy tín hàng đầu.</p>
-      <button class="btn-explore">Khám phá ngay</button>
+
+      <router-link to="/products" class="btn-explore">
+        Khám phá ngay
+      </router-link>
     </section>
 
+    <!-- Sản phẩm nổi bật -->
     <section class="products">
       <h2>Sản phẩm nổi bật</h2>
+
       <div class="product-grid">
-        <div class="product-card">
+        <div
+          class="product-card"
+          v-for="product in products"
+          :key="product.id"
+        >
           <div class="placeholder-img">Ảnh SP</div>
-          <h3>Laptop Gaming cũ</h3>
-          <p class="price">15.000.000đ</p>
-          <button>Xem chi tiết</button>
-        </div>
-        <div class="product-card">
-          <div class="placeholder-img">Ảnh SP</div>
-          <h3>Điện thoại iPhone 12</h3>
-          <p class="price">8.500.000đ</p>
-          <button>Xem chi tiết</button>
-        </div>
-         <div class="product-card">
-          <div class="placeholder-img">Ảnh SP</div>
-          <h3>Bàn phím cơ</h3>
-          <p class="price">500.000đ</p>
-          <button>Xem chi tiết</button>
+          <h3>{{ product.name }}</h3>
+          <p class="price">{{ formatPrice(product.price) }}</p>
+
+          <router-link
+            :to="`/products/${product.id}`"
+            class="btn-detail"
+          >
+            Xem chi tiết
+          </router-link>
         </div>
       </div>
+
+      <div class="view-all">
+        <router-link to="/products">
+          Xem tất cả sản phẩm →
+        </router-link>
+      </div>
     </section>
+    <section class="about-preview">
+  <h2>Về OLD2NEW</h2>
+  <p>
+    OLD2NEW là nền tảng mua bán đồ cũ C2C,
+    giúp bạn bán lại những món đồ không còn sử dụng
+    và tìm kiếm sản phẩm chất lượng với giá hợp lý.
+  </p>
+
+  <router-link to="/about" class="btn-detail">
+    Xem thêm →
+  </router-link>
+</section>
+
+
+    <!-- dùng lại Footer đã tạo -->
+    <Footer />
   </div>
 </template>
 
 <script setup>
-// Hiện tại trang chủ chưa cần logic phức tạp
+import Header from '@/views/layout/Header.vue'
+import Footer from '@/views/layout/Footer.vue'
+
+const products = [
+  { id: 1, name: 'Laptop Gaming ASUS TUF', price: 15000000 },
+  { id: 2, name: 'iPhone 12 64GB', price: 8500000 },
+  { id: 3, name: 'Bàn phím cơ Akko', price: 500000 }
+]
+
+const formatPrice = (price) =>
+  price.toLocaleString('vi-VN') + 'đ'
 </script>
-
-<style scoped>
-/* Reset và style cơ bản */
+<style>
 .home-container {
-  font-family: 'Segoe UI', sans-serif;
+  /* font-family: 'Segoe UI', sans-serif; */
   color: #333;
-}
-
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.logo {
-  font-weight: bold;
-  font-size: 1.5rem;
-  color: #007bff;
-}
-
-.nav-links a {
-  margin: 0 15px;
-  text-decoration: none;
-  color: #555;
-  font-weight: 500;
-}
-
-.btn-login {
-  text-decoration: none;
-  background-color: #007bff;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-weight: 500;
 }
 
 /* Banner */
@@ -97,30 +90,24 @@
 
 .banner h1 {
   font-size: 2.5rem;
-  margin-bottom: 0.5rem;
 }
 
 .btn-explore {
+  display: inline-block;
+  margin-top: 1rem;
   background: white;
   color: #007bff;
-  border: none;
   padding: 10px 25px;
   border-radius: 20px;
   font-weight: bold;
-  cursor: pointer;
-  margin-top: 1rem;
+  text-decoration: none;
 }
 
-/* Products */
+/* Products preview */
 .products {
   padding: 2rem;
   max-width: 1200px;
-  margin: 0 auto;
-}
-
-.products h2 {
-  text-align: center;
-  margin-bottom: 2rem;
+  margin: auto;
 }
 
 .product-grid {
@@ -134,7 +121,7 @@
   border-radius: 8px;
   padding: 1rem;
   text-align: center;
-  transition: transform 0.2s;
+  transition: all 0.2s;
 }
 
 .product-card:hover {
@@ -143,33 +130,31 @@
 }
 
 .placeholder-img {
-  width: 100%;
   height: 150px;
-  background-color: #eee;
+  background: #eee;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-  color: #888;
 }
 
 .price {
   color: #d0021b;
   font-weight: bold;
-  font-size: 1.1rem;
 }
 
-.product-card button {
-  background-color: white;
+.btn-detail {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 14px;
   border: 1px solid #007bff;
   color: #007bff;
-  padding: 5px 15px;
   border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
+  text-decoration: none;
 }
-.product-card button:hover {
-  background-color: #007bff;
+
+.btn-detail:hover {
+  background: #007bff;
   color: white;
 }
 </style>
